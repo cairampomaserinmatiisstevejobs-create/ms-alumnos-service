@@ -1,0 +1,123 @@
+<mxGraphModel adaptiveColors="auto">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+
+    <!-- BOUNDED CONTEXT container -->
+    <mxCell id="bc" value="Bounded Context: Registro de Alumnos" style="swimlane;startSize=30;fillColor=default;strokeColor=default;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+      <mxGeometry x="160" y="60" width="780" height="560" as="geometry" />
+    </mxCell>
+
+    <!-- WEB LAYER -->
+    <mxCell id="web" value="Driving Adapter â€” Web (HTTP)" style="swimlane;startSize=25;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="bc">
+      <mxGeometry x="20" y="50" width="220" height="140" as="geometry" />
+    </mxCell>
+    <mxCell id="ctrl" value="AlumnoController&#xa;implements AlumnosApi" style="rounded=1;fillColor=default;strokeColor=default;fontSize=10;" vertex="1" parent="web">
+      <mxGeometry x="20" y="40" width="180" height="40" as="geometry" />
+    </mxCell>
+    <mxCell id="exh" value="GlobalExceptionHandler" style="rounded=1;fillColor=default;strokeColor=default;fontSize=10;" vertex="1" parent="web">
+      <mxGeometry x="20" y="90" width="180" height="35" as="geometry" />
+    </mxCell>
+
+    <!-- APPLICATION LAYER -->
+    <mxCell id="app" value="Application â€” Casos de Uso" style="swimlane;startSize=25;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="bc">
+      <mxGeometry x="280" y="50" width="220" height="140" as="geometry" />
+    </mxCell>
+    <mxCell id="svc" value="AlumnoService&#xa;crear / listar / obtener&#xa;actualizar / eliminar" style="rounded=1;fillColor=default;strokeColor=default;fontSize=10;" vertex="1" parent="app">
+      <mxGeometry x="20" y="40" width="180" height="50" as="geometry" />
+    </mxCell>
+    <mxCell id="warn" value="âš ï¸ importa web.model&#xa;â€” pendiente refactor" style="rounded=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=9;" vertex="1" parent="app">
+      <mxGeometry x="20" y="98" width="180" height="32" as="geometry" />
+    </mxCell>
+
+    <!-- DOMAIN LAYER -->
+    <mxCell id="domain" value="Domain â€” NÃºcleo Puro" style="swimlane;startSize=25;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" vertex="1" parent="bc">
+      <mxGeometry x="280" y="230" width="220" height="200" as="geometry" />
+    </mxCell>
+    <mxCell id="model" value="Alumno record&#xa;TipoDocumento enum&#xa;EstadoAlumno enum" style="rounded=1;fillColor=default;strokeColor=default;fontSize=10;" vertex="1" parent="domain">
+      <mxGeometry x="20" y="40" width="180" height="50" as="geometry" />
+    </mxCell>
+    <mxCell id="port" value="Â«interfaceÂ»&#xa;AlumnoRepositoryPort&#xa;save / findById / findAll&#xa;softDelete / existsByDoc" style="rounded=1;fillColor=default;strokeColor=default;fontSize=10;" vertex="1" parent="domain">
+      <mxGeometry x="20" y="100" width="180" height="60" as="geometry" />
+    </mxCell>
+    <mxCell id="exc" value="AlumnoNotFoundException&#xa;DocumentoDuplicadoException" style="rounded=1;fillColor=default;strokeColor=default;fontSize=9;" vertex="1" parent="domain">
+      <mxGeometry x="20" y="168" width="180" height="25" as="geometry" />
+    </mxCell>
+
+    <!-- INFRASTRUCTURE LAYER -->
+    <mxCell id="infra" value="Driven Adapter â€” Infrastructure (R2DBC)" style="swimlane;startSize=25;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="bc">
+      <mxGeometry x="540" y="230" width="220" height="200" as="geometry" />
+    </mxCell>
+    <mxCell id="adapter" value="AlumnoRepositoryAdapter&#xa;implements AlumnoRepositoryPort" style="rounded=1;fillColor=default;strokeColor=default;fontSize=10;" vertex="1" parent="infra">
+      <mxGeometry x="20" y="40" width="180" height="45" as="geometry" />
+    </mxCell>
+    <mxCell id="r2repo" value="AlumnoR2dbcRepository&#xa;ReactiveCrudRepository" style="rounded=1;fillColor=default;strokeColor=default;fontSize=10;" vertex="1" parent="infra">
+      <mxGeometry x="20" y="100" width="180" height="40" as="geometry" />
+    </mxCell>
+    <mxCell id="entity" value="AlumnoEntity&#xa;@Table(alumnos)" style="rounded=1;fillColor=default;strokeColor=default;fontSize=10;" vertex="1" parent="infra">
+      <mxGeometry x="20" y="155" width="180" height="35" as="geometry" />
+    </mxCell>
+
+    <!-- EXTERNAL: APIM -->
+    <mxCell id="apim" value="ðŸŒ Azure APIM&#xa;/api/v1/alumnos" style="rounded=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="20" y="270" width="130" height="60" as="geometry" />
+    </mxCell>
+
+    <!-- EXTERNAL: PostgreSQL -->
+    <mxCell id="db" value="ðŸ—„ï¸ PostgreSQL / H2&#xa;R2DBC" style="shape=cylinder3;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="980" y="390" width="120" height="60" as="geometry" />
+    </mxCell>
+
+    <!-- EXTERNAL: AKS -->
+    <mxCell id="aks" value="â˜ï¸ AKS&#xa;namespace: msirildev" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="980" y="200" width="120" height="50" as="geometry" />
+    </mxCell>
+
+    <!-- EXTERNAL: ACR -->
+    <mxCell id="acr" value="ðŸ“¦ ACR&#xa;Docker Image" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="980" y="100" width="120" height="50" as="geometry" />
+    </mxCell>
+
+    <!-- EDGES -->
+    <!-- APIM -> Controller -->
+    <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="apim" target="ctrl" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Controller -> Service -->
+    <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="ctrl" target="svc" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Service -> Port -->
+    <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="svc" target="port" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Port -> Adapter (dashed = implements) -->
+    <mxCell id="e4" value="implements" style="edgeStyle=orthogonalEdgeStyle;dashed=1;endArrow=open;" edge="1" source="port" target="adapter" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Adapter -> R2Repo -->
+    <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="adapter" target="r2repo" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- R2Repo -> Entity -->
+    <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="r2repo" target="entity" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Entity -> DB -->
+    <mxCell id="e7" value="r2dbc" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="entity" target="db" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- AKS -> ACR -->
+    <mxCell id="e8" value="pull image" style="edgeStyle=orthogonalEdgeStyle;dashed=1;" edge="1" source="aks" target="acr" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+  </root>
+</mxGraphModel>
