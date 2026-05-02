@@ -34,12 +34,12 @@ stages:
           - checkout: self
             fetchDepth: 0
 
-          - bash: npm install -g @stoplight/spectral-cli
+          - bash: npm install -g @stoplight/spectral-cli @stoplight/spectral-formats @stoplight/spectral-rulesets
             displayName: "Instalar Spectral"
 
           - bash: |
-              spectral lint src/main/resources/openapi/api.yml \
-                --ruleset https://unpkg.com/@stoplight/spectral-owasp-ruleset \
+              spectral lint "$(Build.SourcesDirectory)/src/main/resources/openapi/api.yml" \
+                --ruleset "$(Build.SourcesDirectory)/.spectral.yml" \
                 --format pretty
             displayName: "Spectral lint api.yml"
 
