@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ms-alumnos-service
+  namespace: msirildev
+  labels:
+    app: ms-alumnos-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ms-alumnos-service
+  template:
+    metadata:
+      labels:
+        app: ms-alumnos-service
+    spec:
+      containers:
+        - name: ms-alumnos-service
+          image: acrappcliente.azurecr.io/ms-alumnos-service:latest
+          ports:
+            - containerPort: 8086
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "default"
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8086
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8086
+            initialDelaySeconds: 20
+            periodSeconds: 5
