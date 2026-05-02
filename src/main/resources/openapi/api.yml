@@ -1,0 +1,353 @@
+openapi: 3.0.3
+info:
+  title: API Registro de Alumnos
+  description: API reactiva sin fotografia para registro y gestion de alumnos - MSIRILDEV
+  version: 1.0.0
+  contact:
+    name: MSIRILDEV
+
+servers:
+  - url: http://localhost:8086/api/v1
+    description: Servidor local de desarrollo
+
+tags:
+  - name: Alumnos
+    description: Operaciones de registro y gestion de alumnos
+
+paths:
+  /alumnos:
+    post:
+      tags: [Alumnos]
+      summary: Crear nuevo alumno
+      operationId: crearAlumno
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlumnoRequest'
+      responses:
+        '201':
+          description: Alumno creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlumnoResponse'
+        '400':
+          description: Solicitud invalida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Documento duplicado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    get:
+      tags: [Alumnos]
+      summary: Listar alumnos paginado
+      operationId: listarAlumnos
+      parameters:
+        - name: pagina
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 0
+        - name: tamanio
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Listado paginado de alumnos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedAlumnoResponse'
+
+  /alumnos/{id}:
+    get:
+      tags: [Alumnos]
+      summary: Obtener alumno por ID
+      operationId: obtenerAlumnoPorId
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Alumno encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlumnoResponse'
+        '404':
+          description: Alumno no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      tags: [Alumnos]
+      summary: Actualizar alumno completo
+      operationId: actualizarAlumno
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlumnoRequest'
+      responses:
+        '200':
+          description: Alumno actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlumnoResponse'
+        '404':
+          description: Alumno no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    patch:
+      tags: [Alumnos]
+      summary: Actualizar alumno parcialmente
+      operationId: actualizarAlumnoParcial
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlumnoUpdateRequest'
+      responses:
+        '200':
+          description: Alumno actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlumnoResponse'
+        '404':
+          description: Alumno no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      tags: [Alumnos]
+      summary: Dar de baja logica al alumno
+      operationId: eliminarAlumno
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Alumno dado de baja exitosamente
+        '404':
+          description: Alumno no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /alumnos/documento/{numero}:
+    get:
+      tags: [Alumnos]
+      summary: Obtener alumno por numero de documento
+      operationId: obtenerAlumnoPorDocumento
+      parameters:
+        - name: numero
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Alumno encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlumnoResponse'
+        '404':
+          description: Alumno no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+
+    AlumnoRequest:
+      type: object
+      required:
+        - tipo_documento
+        - numero_documento
+        - nombres
+        - apellidos
+        - fecha_nacimiento
+        - correo
+      properties:
+        tipo_documento:
+          type: string
+          enum: [DNI, CE, PASAPORTE]
+          example: DNI
+        numero_documento:
+          type: string
+          maxLength: 20
+          example: "12345678"
+        nombres:
+          type: string
+          maxLength: 100
+          example: "Juan Carlos"
+        apellidos:
+          type: string
+          maxLength: 100
+          example: "Garcia Lopez"
+        fecha_nacimiento:
+          type: string
+          format: date
+          example: "2000-04-26"
+        correo:
+          type: string
+          format: email
+          example: "juan.garcia@example.com"
+        telefono:
+          type: string
+          maxLength: 15
+          example: "987654321"
+        estado:
+          type: string
+          enum: [ACTIVO]
+          default: ACTIVO
+          readOnly: true
+
+    AlumnoUpdateRequest:
+      type: object
+      properties:
+        tipo_documento:
+          type: string
+          enum: [DNI, CE, PASAPORTE]
+        numero_documento:
+          type: string
+          maxLength: 20
+        nombres:
+          type: string
+          maxLength: 100
+        apellidos:
+          type: string
+          maxLength: 100
+        fecha_nacimiento:
+          type: string
+          format: date
+        correo:
+          type: string
+          format: email
+        telefono:
+          type: string
+          maxLength: 15
+        estado:
+          type: string
+          enum: [ACTIVO, INACTIVO]
+
+    AlumnoResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1001
+        tipo_documento:
+          type: string
+          enum: [DNI, CE, PASAPORTE]
+          example: DNI
+        numero_documento:
+          type: string
+          example: "12345678"
+        nombres:
+          type: string
+          example: "Juan Carlos"
+        apellidos:
+          type: string
+          example: "Garcia Lopez"
+        fecha_nacimiento:
+          type: string
+          format: date
+          example: "2000-04-26"
+        correo:
+          type: string
+          format: email
+          example: "juan.garcia@example.com"
+        telefono:
+          type: string
+          example: "987654321"
+        estado:
+          type: string
+          enum: [ACTIVO, INACTIVO]
+          example: ACTIVO
+
+    PagedAlumnoResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlumnoResponse'
+        pagina:
+          type: integer
+          example: 0
+        tamanio:
+          type: integer
+          example: 10
+        total:
+          type: integer
+          format: int64
+          example: 150
+        totalPaginas:
+          type: integer
+          example: 15
+
+    ErrorResponse:
+      type: object
+      properties:
+        codigo:
+          type: string
+          example: "ALUMNO_NOT_FOUND"
+        mensaje:
+          type: string
+          example: "No se encontro el alumno con id 1001"
+        timestamp:
+          type: string
+          format: date-time
+          example: "2026-04-26T15:30:00Z"
